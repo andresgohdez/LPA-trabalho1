@@ -1,0 +1,7 @@
+2 // opçao do menu exec 2 (Element uniqueness)
+5
+12
+3
+13
+1
+99

@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
          fecho = convexHull(&tam); // Exec 4 
          
          printf("Os pontos do fecho convexo sao: \n");
-         for(i = 0; i < tam; i++){         
+         for(i = 0; i < tam; i++){ //printa para o usuario o pontos do fecho convexo       
                printf("(%d/%d)", fecho[i].x, fecho[i].y);
          }      
          
@@ -183,60 +183,57 @@ struct coordenada* convexHull(int * tamanho){//int* tamanho) {
                 vetCoord[i].posicao = -1;
          }
          
-         ordenaVetorCoordenada(vetCoord, 0, tam-1);
-         
-         for(i = 0;i < tam ;i++){
-                 printf("x = %d y = %d \n", vetCoord[i].x, vetCoord[i].y);  
-         }
-         
+         ordenaVetorCoordenada(vetCoord, 0, tam-1);  // ordena o vetor de coordenadas em relacao a X
+
          i=0;
-         int p_ant = -1, p_atual = 0 , p_prox = 1, p = 1, fim = 0; // 0-false -- 1-verdade
+         int p_ant = -1, p_atual = 0 , p_prox = 1, p = 1;
+         int fim = 0; // 0-false -- 1-verdade
          double maiorAngulo = 0;
          
          vetCoord[p_atual].posicao = 0;
 
          while(fim != 1){
              for(; p_prox < tam ; p_prox++ ){
-                printf("p_prox %d \n", p_prox);  
                 if(vetCoord[p_prox].posicao == -1){   
-                   double anguloAux = angulo(vetCoord, p_ant, p_atual, p_prox);
-                   printf("angulo x %lf \n", anguloAux);  
+                   double anguloAux = angulo(vetCoord, p_ant, p_atual, p_prox); // pega o angulo entre os tres pontos do vetor
                    if(anguloAux > maiorAngulo){
-                         maiorAngulo = anguloAux;
-                         p = p_prox;                 
-                         printf("p %d \n", p);
+                         maiorAngulo = anguloAux; // pega o menor angulo entre todos
+                         p = p_prox;
                    }
+                }
+                double anguloFinal = angulo(vetCoord, p_ant, p_atual, 0);   // verifica se completou o fecho convexo e chegou no final
+                if(anguloFinal > maiorAngulo){
+                         fim = 1; // fim = verdade
                 }                              
              }
-             
              i++;
-             vetCoord[p].posicao = i;
+             if(fim != 1){
+                 vetCoord[p].posicao = i; // adiciona a posicao da coordenda do fecho
+             }   
+             // muda os valores dos pontos para que o sistema consiga verificar todos os pontos
              p_ant = p_atual;
              p_atual = p;
-             p_prox = p_atual+1; 
-             if(p_prox == tam){
-                       fim = 1;
-             }       
-             maiorAngulo = 0; 
-         }
-         printf("i %d \n", i);
+             if( p_atual<3){
+                 p_prox = p_atual+1;
+             } else {
+                 p_prox = 1;
+             }
+             maiorAngulo = 0; // reinicia a variavel
          
-         (*tamanho) = i+1;
-         struct coordenada *fecho = (struct coordenada*)calloc(i,sizeof(struct coordenada));
+         }
+         
+         (*tamanho) = i; // retorna esse tamanho para a chama na main
+         struct coordenada *fecho = (struct coordenada*)calloc(i,sizeof(struct coordenada));  // cria o fecho para ser retornado
          for(i=0 ; i<tam ; i++){
-                 if(vetCoord[i].posicao != -1){
-                          fecho[vetCoord[i].posicao] = vetCoord[i];     
-                          printf("posicao %d \n", vetCoord[i].posicao);
-                          printf("fecho x %d \n", fecho[vetCoord[i].posicao].x);
-                          printf("fecho x %d \n", fecho[vetCoord[i].posicao].y);   
-                          system("PAUSE");      
-                 }  
+              if(vetCoord[i].posicao != -1){
+                   fecho[vetCoord[i].posicao] = vetCoord[i];         
+              }  
          }
          
  return fecho;
 }
 
-void ordenaVetor(int *vet, int esquerda, int direita) { 
+void ordenaVetor(int *vet, int esquerda, int direita) { // ordena o vetor de numeros
     int i, j, x, y;
      
     i = esquerda;
@@ -302,9 +299,9 @@ void ordenaVetorCoordenada(struct coordenada *vetCoord, int esquerda, int direit
 
 double angulo(struct coordenada *vetCoord, int p_ant,int p_atual,int p_prox){
       // printf("ant %d atual %d prox %d \n", p_ant, p_atual, p_prox);
-      int produto = 0;
-      double modulo;
-      double ang;
+      int produto = 0; // produto é o produto escalar entre dois vetores
+      double modulo; // é a multiplicacao entre o tamanho de dois vetores
+      double ang; // angulo entre 3 pontos
       if (p_ant == -1){
          produto = (-1)*(vetCoord[p_prox].y - vetCoord[p_atual].y);
          modulo = pow(pow((vetCoord[p_prox].x - vetCoord[p_atual].x), 2) + pow((vetCoord[p_prox].y - vetCoord[p_atual].y), 2) ,0.5);   

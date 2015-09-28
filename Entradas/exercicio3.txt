@@ -1,0 +1,7 @@
+3 // opçao do menu exec 3 (frequency distribution)
+5
+12
+3
+13
+1
+99

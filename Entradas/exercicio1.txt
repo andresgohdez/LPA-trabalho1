@@ -1,0 +1,7 @@
+1 // opçao do menu exec 1 (Closest Pair)
+5
+12
+3
+13
+1
+99
